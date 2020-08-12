@@ -28,28 +28,26 @@ class _converteurState extends State<converteur> {
   var dController = TextEditingController();
   var oController = TextEditingController();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    dController.addListener(FOugiya());
-    oController.addListener(FDollar());
-  }
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   dController.addListener(FOugiya());
+  //   oController.addListener(FDollar());
+  // }
 
   FDollar() {
     setState(() {
       dollar = double.parse(dController.text);
-      ougiya = Convert(dollar, true);
+      ougiya = Convert(dollar, false);
       if (isDollar) oController.text = ougiya.toString();
-      isDollar = true;
     });
   }
 
   FOugiya() {
     ougiya = double.parse(oController.text);
-    dollar = Convert(ougiya, false);
-    if (!isDollar) dController.text = dollar.toString();
-    isDollar = false;
+    dollar = Convert(ougiya, true);
+    if (isDollar) dController.text = dollar.toString();
   }
 
   double Convert(double variable, bool isDol) {
@@ -77,17 +75,22 @@ class _converteurState extends State<converteur> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    "OUGIYA",
+                    "DOLLAR",
                     style: TextStyle(
                       color: Colors.blueAccent,
                       fontSize: 30,
                     ),
                   ),
                   TextField(
-                    controller: oController,
+                    controller: dController,
+                    onChanged: (txt) {
+                      setState(() {
+                        FDollar();
+                      });
+                    },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      suffixText: "UM",
+                      suffixIcon: Icon(Icons.attach_money),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       ),
@@ -103,17 +106,22 @@ class _converteurState extends State<converteur> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    "DOLLAR",
+                    "OUGIYA",
                     style: TextStyle(
                       color: Colors.blueAccent,
                       fontSize: 30,
                     ),
                   ),
                   TextField(
-                    controller: dController,
+                    controller: oController,
+                    onSubmitted: (text) {
+                      setState(() {
+                        FDollar();
+                      });
+                    },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.attach_money),
+                      suffixText: "UM",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       ),
@@ -122,8 +130,15 @@ class _converteurState extends State<converteur> {
                 ],
               ),
             ),
+            SizedBox(
+              width: 20,
+            ),
           ],
         ),
+        SizedBox(
+          height: 30,
+        ),
+        // InkWell()
       ]),
     );
   }
