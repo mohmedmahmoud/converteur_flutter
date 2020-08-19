@@ -9,6 +9,7 @@ class home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: converteur(),
       ),
     );
@@ -24,34 +25,46 @@ class converteur extends StatefulWidget {
 
 class _converteurState extends State<converteur> {
   double ougiya = 0.0, dollar = 0.0;
+  // double Euro = 44.8389;
+  // double Derhem = 4.09632;
   bool isDollar = true;
   var dController = TextEditingController();
   var oController = TextEditingController();
-
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   dController.addListener(FOugiya());
-  //   oController.addListener(FDollar());
-  // }
+  var drawer = ["Dollar", "Euro", "Derhem"];
+  var d = "Dollar";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // dController.addListener(FOugiya());
+    //oController.addListener(FDollar());
+  }
 
   FDollar() {
     setState(() {
       dollar = double.parse(dController.text);
-      ougiya = Convert(dollar, false);
+      ougiya = Convert(dollar, d);
       if (isDollar) oController.text = ougiya.toString();
     });
   }
 
-  FOugiya() {
-    ougiya = double.parse(oController.text);
-    dollar = Convert(ougiya, true);
-    if (isDollar) dController.text = dollar.toString();
-  }
+  // FOugiya() {
+  //   ougiya = double.parse(oController.text);
+  //   dollar = Convert(ougiya, d);
+  //   if (isDollar) dController.text = dollar.toString();
+  // }
 
-  double Convert(double variable, bool isDol) {
-    return isDol ? (variable / 370.56) : (variable * 370.56);
+  // double Convert(double variable, bool isDol) {
+  //   return isDol ? (variable / 370.56) : (variable * 370.56);
+  // }
+  double Convert(double variable, String d) {
+    if (d == "Dollar") {
+      return (variable * 37.56);
+    } else if (d == "Euro") {
+      return (variable * 44.8389);
+    } else {
+      return (variable * 4.09632);
+    }
   }
 
   @override
@@ -71,16 +84,33 @@ class _converteurState extends State<converteur> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SizedBox(
+              width: 10,
+            ),
             Expanded(
               child: Column(
                 children: <Widget>[
-                  Text(
-                    "DOLLAR",
-                    style: TextStyle(
-                      color: Colors.blueAccent,
-                      fontSize: 30,
-                    ),
-                  ),
+                  // Text(
+                  //   "DOLLAR",
+                  //   style: TextStyle(
+                  //     color: Colors.blueAccent,
+                  //     fontSize: 30,
+                  //   ),
+                  // ),
+                  DropdownButton(
+                      style: TextStyle(fontSize: 30, color: Colors.blueAccent),
+                      items: drawer.map((item) {
+                        return DropdownMenuItem(
+                          child: Text(item),
+                          value: item,
+                        );
+                      }).toList(),
+                      value: d,
+                      onChanged: (newValue) {
+                        setState(() {
+                          d = newValue;
+                        });
+                      }),
                   TextField(
                     controller: dController,
                     onChanged: (txt) {
@@ -100,17 +130,20 @@ class _converteurState extends State<converteur> {
               ),
             ),
             SizedBox(
-              width: 20,
+              width: 10,
             ),
             Expanded(
               child: Column(
                 children: <Widget>[
                   Text(
-                    "OUGIYA",
+                    "Ougiya",
                     style: TextStyle(
                       color: Colors.blueAccent,
                       fontSize: 30,
                     ),
+                  ),
+                  SizedBox(
+                    height: 12,
                   ),
                   TextField(
                     controller: oController,
